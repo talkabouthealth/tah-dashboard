@@ -28,9 +28,6 @@
 									con.setRs(sqlStatement);
 
 									while(con.getRs().next()){
-										
-									//	setUname(con.getRs().getObject("uname").toString());
-									//	setUname(con.getRs().getObject("email").toString());
 								%>
 										<br>
 										<input type = "radio" name = "conversation" value = "<%= con.getRs().getObject("topic_id") %>">
@@ -60,8 +57,7 @@
 									System.out.println("Listing User Info......");
 									while(con2.getRs().next()){
 										uInfo = new userInfo();
-									//	setUname(con.getRs().getObject("uname").toString());
-									//	setUname(con.getRs().getObject("email").toString());
+
 								%>
 								<br>
 								<input type = "checkbox" name = "user_email" value = "<%= con2.getRs().getInt("uid") %>"> 

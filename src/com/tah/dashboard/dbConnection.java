@@ -22,7 +22,7 @@ public class dbConnection {
     public dbConnection() throws SQLException {
         
         // TODO Auto-generated constructor stub
-    //	System.out.println("Creating connection...");
+
         db_host = "jdbc:mysql://localhost:3306/talkmidb";
         db_user = "root";
         db_password = "applepie";

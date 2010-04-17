@@ -52,11 +52,8 @@ public class Notification extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 	private void passData(HttpServletRequest request) throws Exception{
-		
-//		String email [] = request.getParameterValues("user_email");
 		String UID_S [] = request.getParameterValues("user_email");
-		printTest pt = new printTest();
-		pt.printline();
+
 		dbConnection con = new dbConnection();
 		String sql; 
 		int [] _uid = new int [UID_S.length];
@@ -68,24 +65,12 @@ public class Notification extends HttpServlet {
 			 con.setRs(sql);
 			 while(con.getRs().next()){
 				 email[i] = (String) con.getRs().getObject("email");
-			//	 System.out.println(email[i] + " " + _uid[i]);
 			 }
 			 System.out.println(email[i] + " " + _uid[i]);
 		}
 		
 		IMNotifier IM = new IMNotifier();
 		IM.Broadcast(email, _uid);
-		
-	/*	
-		String[] mail_list = {"thero666@gmail.com", "talkabouthealth.com@gmail.com"};
-		
-		int[] UID = {1,5};
-		
-		IMNotifier MyNotifier = new IMNotifier();
-								
-		
-		System.out.println("Is it broadcast to all users? " + MyNotifier.Broadcast(mail_list, UID));
-		
-*/
+
 	}
 }
