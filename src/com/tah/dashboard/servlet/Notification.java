@@ -8,7 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 import com.tah.dashboard.dbConnection;
+import com.tah.im.IMNotifier;
+import com.test.printTest;
 
 
 
@@ -31,7 +34,6 @@ public class Notification extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response){
 		// TODO Auto-generated method stub
-	
 
 				try {
 					passData(request);
@@ -53,7 +55,8 @@ public class Notification extends HttpServlet {
 		
 //		String email [] = request.getParameterValues("user_email");
 		String UID_S [] = request.getParameterValues("user_email");
-		
+		printTest pt = new printTest();
+		pt.printline();
 		dbConnection con = new dbConnection();
 		String sql; 
 		int [] _uid = new int [UID_S.length];
@@ -69,20 +72,20 @@ public class Notification extends HttpServlet {
 			 }
 			 System.out.println(email[i] + " " + _uid[i]);
 		}
-		/*
+		
 		IMNotifier IM = new IMNotifier();
 		IM.Broadcast(email, _uid);
-		*/
 		
+	/*	
 		String[] mail_list = {"thero666@gmail.com", "talkabouthealth.com@gmail.com"};
 		
 		int[] UID = {1,5};
 		
-//		IMNotifier MyNotifier = new IMNotifier();
+		IMNotifier MyNotifier = new IMNotifier();
 								
 		
-//		System.out.println("Is it broadcast to all users? " + MyNotifier.Broadcast(mail_list, UID));
+		System.out.println("Is it broadcast to all users? " + MyNotifier.Broadcast(mail_list, UID));
 		
-
+*/
 	}
 }
