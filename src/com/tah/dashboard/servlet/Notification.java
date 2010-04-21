@@ -7,8 +7,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.tah.dashboard.dbConnection;
+import com.tah.dbConnection.dbConnection;
 import com.tah.im.IMNotifier;
+
+
+
 
 
 
@@ -32,14 +35,14 @@ public class Notification extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response){
 		// TODO Auto-generated method stub
-
+		response.encodeRedirectURL("userlist.jsp");
 				try {
 					passData(request);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	
+				
 
 	}
 
@@ -50,7 +53,7 @@ public class Notification extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 	private void passData(HttpServletRequest request) throws Exception{
-		String UID_S [] = request.getParameterValues("user_email");
+		String UID_S [] = request.getParameterValues("user_id");
 
 		dbConnection con = new dbConnection();
 		String sql; 
