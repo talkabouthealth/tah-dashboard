@@ -1,0 +1,52 @@
+<?xml version = "1.0" ?>
+<project name = "tah-dashboard" basedir = "." default = "war">
+	<target name = "init" description = "perset all pathes of directories" >
+		<property name = "buildDir" value = "${basedir}/build" />
+		<property name = "classesDir" value = "${buildDir}/classes" />
+		<property name = "srcDir" value = "${basedir}/src" />
+		<property name = "libDir" value = "${basedir}/WebContent/WEB-INF/lib" />
+		<path id = "compileClasspath">
+			<fileset dir = "${libDir}" />
+			<fileset dir = "/usr/local/tomcat/lib" />
+		</path>
+	</target>
+	<target name ="clean" depends = "init" description = "clean everything">
+		<echo message = "${buildDir} has been removed" />
+		<delete dir = "${buildDir}" />
+	</target>
+	<target name = "pre-compile" depends = "clean" description = "compile all .java">
+		<echo message = "${buildDir} has been created" />
+		<mkdir dir = "${buildDir}" />
+		<mkdir dir = "${classesDir}" />
+		<javac srcdir = "${srcDir}" destdir = "${classesDir}" debug = "true">
+			<classpath refid = "compileClasspath" />
+		</javac>
+	</target>
+	<target name = "pre-jar" depends = "pre-compile">
+		<jar destfile = "${basedir}/WebContent/WEB-INF/lib/dashboard.jar">
+			<fileset dir = "${buildDir}">
+				<include name = "**/**/**/*" />
+			</fileset>
+		</jar>
+	</target>
+	<target name = "compile" depends = "clean" description = "compile all .java">
+		<mkdir dir = "${buildDir}" />
+		<mkdir dir = "${classesDir}" />
+		<javac srcdir = "${srcDir}" destdir = "${classesDir}" debug = "true">
+			<classpath refid = "compileClasspath" />
+		</javac>
+		<copy todir = "${basedir}/WebContent/WEB-INF">
+			<fileset dir = "${buildDir}" >
+				<include name = "**/**/**/*" />
+			</fileset>
+		</copy>
+	</target>
+	<target name = "war" depends = "compile" description = "pack war file">
+		<war destfile = "../war-files/tah-dashboard.war" webxml = "${basedir}/WebContent/WEB-INF/web.xml">
+			<fileset dir = "${basedir}/WebContent/">
+				<include name = "**/**/**/**/**/*" />
+			</fileset>
+		</war>
+	</target>
+
+</project>
