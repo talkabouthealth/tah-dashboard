@@ -29,7 +29,9 @@
 			</fileset>
 		</jar>
 	</target>
-	<target name = "compile" depends = "pre-jar" description = "compile all .java">
+	<target name = "compile" depends = "clean" description = "compile all .java">
+		<mkdir dir = "${buildDir}" />
+		<mkdir dir = "${classesDir}" />
 		<javac srcdir = "${srcDir}" destdir = "${classesDir}" debug = "true">
 			<classpath refid = "compileClasspath" />
 		</javac>
