@@ -4,8 +4,7 @@
 <%@ page import="java.sql.Date"%>
 <%@ page import ="java.lang.Object.*" %>
 <%@ page import="java.text.SimpleDateFormat"%>
-<%@ page import="com.tah.dbConnection.*"%>
-<%@ page import="com.tah.userInfo.*" %>
+<%@ page import="com.tah.dashboard.*"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>

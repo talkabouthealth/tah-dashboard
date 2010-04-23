@@ -7,14 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.tah.dbConnection.dbConnection;
+
+import com.tah.dashboard.dbConnection;
 import com.tah.im.IMNotifier;
-
-
-
-
-
-
 
 /**
  * Servlet implementation class Notification

@@ -14,10 +14,22 @@
 		<echo message = "${buildDir} has been removed" />
 		<delete dir = "${buildDir}" />
 	</target>
-	<target name = "compile" depends = "clean" description = "compile all .java">
+	<target name = "pre-compile" depends = "clean" description = "compile all .java">
 		<echo message = "${buildDir} has been created" />
 		<mkdir dir = "${buildDir}" />
 		<mkdir dir = "${classesDir}" />
+		<javac srcdir = "${srcDir}" destdir = "${classesDir}" debug = "true">
+			<classpath refid = "compileClasspath" />
+		</javac>
+	</target>
+	<target name = "pre-jar" depends = "pre-compile">
+		<jar destfile = "${basedir}/WebContent/WEB-INF/lib/dashboard.jar">
+			<fileset dir = "${buildDir}">
+				<include name = "**/**/**/*" />
+			</fileset>
+		</jar>
+	</target>
+	<target name = "compile" depends = "pre-jar" description = "compile all .java">
 		<javac srcdir = "${srcDir}" destdir = "${classesDir}" debug = "true">
 			<classpath refid = "compileClasspath" />
 		</javac>
