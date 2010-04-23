@@ -49,7 +49,11 @@ public class Notification extends HttpServlet {
 	}
 	private void passData(HttpServletRequest request) throws Exception{
 		String UID_S [] = request.getParameterValues("user_id");
-
+		String _tid_s;
+		int _tid;
+		
+		_tid_s = request.getParameter("conversation").toString();
+		_tid = Integer.valueOf(_tid_s);
 		dbConnection con = new dbConnection();
 		String sql; 
 		int [] _uid = new int [UID_S.length];
@@ -64,9 +68,8 @@ public class Notification extends HttpServlet {
 			 }
 			 System.out.println(email[i] + " " + _uid[i]);
 		}
-		
 		IMNotifier IM = new IMNotifier();
-		IM.Broadcast(email, _uid);
+		IM.Broadcast(email, _uid, _tid);
 
 	}
 }
