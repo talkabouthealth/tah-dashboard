@@ -18,12 +18,12 @@
 			<table border = 1>
 				<tr>
 					<td>
-						<div class = "userlist" style="color:#00FFFF">
+						<div class = "userlist" style="color:#000000">
 							
 								<%	
 									dbConnection con = new dbConnection();
 
-									String sqlStatement = "SELECT * FROM topics";
+									String sqlStatement = "SELECT * FROM topics LEFT JOIN talkers ON talkers.uid = topics.uid ORDER BY topics.creation_date";
 									con.setRs(sqlStatement);
 
 									while(con.getRs().next()){
@@ -31,8 +31,9 @@
 										<br>
 										<input type = "radio" name = "conversation" value = "<%= con.getRs().getObject("topic_id") %>">
 								<%
-										out.println(con.getRs().getObject("topic") + " was created by " + con.getRs().getObject("uid") + " on " + con.getRs().getObject("creation_date") +"</br>");
-								
+										out.println(con.getRs().getObject("topics.topic") + " was created by " + con.getRs().getObject("topics.uid") + " on " + con.getRs().getObject("topics.creation_date") +"</br>");
+										out.println("<br>User name:   " + con.getRs().getObject("talkers.uname") + "</br>");
+										out.println("<br>Gender:   " + con.getRs().getObject("talkers.gender") + "</br>");
 									}
 									
 								
