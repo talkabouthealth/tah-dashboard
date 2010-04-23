@@ -24,7 +24,7 @@ public class dbConnection {
         // TODO Auto-generated constructor stub
     //	System.out.println("Creating connection...");
         db_host = "jdbc:mysql://localhost:3306/talkmidb";
-        db_user = "root";
+        db_user = "talkmidb";
         db_password = "applepie";
         con = DriverManager.getConnection(db_host, db_user, db_password);
         stmt = con.createStatement();
