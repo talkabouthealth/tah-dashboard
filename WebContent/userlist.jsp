@@ -17,6 +17,10 @@
 		<form method = "GET" action = "/tah-dashboard/Notification" >
 			<table border = 1>
 				<tr>
+					<th>Topic List</th>
+					<th>User List</th>
+				</tr>
+				<tr>
 					<td>
 						<div class = "userlist" style="color:#000000">
 							
@@ -40,8 +44,7 @@
 								%>
 							
 						</div>
-					</td>
-					
+					</td>  			
 					<td>
 						<div class = "userlist" style="color:#000000">
 							
