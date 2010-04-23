@@ -1,5 +1,5 @@
 <?xml version = "1.0" ?>
-<project name = "tah-dashboard" basedir = "." default = "move">
+<project name = "tah-dashboard" basedir = "." default = "compile">
 	<target name = "init" description = "perset all pathes of directories" >
 		<property name = "buildDir" value = "${basedir}/build" />
 		<property name = "classesDir" value = "${buildDir}/classes" />
