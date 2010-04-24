@@ -66,7 +66,10 @@ public class Notification extends HttpServlet {
 		}
 		
 		IMNotifier IM = new IMNotifier();
-		IM.Broadcast(email, _uid);
+		
+		//TODO define _tid
+		int _tid = 0;
+		IM.Broadcast(email, _uid, _tid);
 
 	}
 }
