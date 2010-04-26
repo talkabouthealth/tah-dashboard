@@ -30,6 +30,17 @@ public class dbConnection {
         stmt = con.createStatement();
     }
 
+    public dbConnection(String _sql) throws SQLException {
+        
+        // TODO Auto-generated constructor stub
+
+        db_host = "jdbc:mysql://localhost:3306/talkmidb";
+        db_user = "talkmidb";
+        db_password = "applepie";
+        con = DriverManager.getConnection(db_host, db_user, db_password);
+        stmt = con.createStatement();
+        setRs(_sql);
+    }
 
 	public void getUserList() throws SQLException {
 		// TODO Auto-generated method stub

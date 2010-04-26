@@ -32,7 +32,7 @@ public class Notification extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.encodeRedirectURL("userlist.jsp");
 				try {
-					passData(request);
+					passData(request, response);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -47,7 +47,7 @@ public class Notification extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
-	private void passData(HttpServletRequest request) throws Exception{
+	private void passData(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String UID_S [] = request.getParameterValues("user_id");
 		String _tid_s;
 		int _tid;
@@ -70,6 +70,6 @@ public class Notification extends HttpServlet {
 		}
 		IMNotifier IM = new IMNotifier();
 		IM.Broadcast(email, _uid, _tid);
-
+		response.sendRedirect("./userlist.jsp");
 	}
 }

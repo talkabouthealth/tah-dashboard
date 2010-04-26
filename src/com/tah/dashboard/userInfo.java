@@ -6,20 +6,29 @@ import java.sql.SQLException;
 public class userInfo {
 	
 	private dbConnection con;
+	private int uid;
+	private String uname;
+	private String email;
+	private String gender;
 	public userInfo() throws SQLException{
 	//	RS = _rs;
 			con = new dbConnection();
 
 	}
-	
-	public ResultSet getUserInfo(int _uid) throws SQLException{
-		ResultSet userInfoRS = null;
+	public userInfo(int _uid) throws SQLException{
 		String sql = "SELECT * FROM talkers WHERE uid = " + _uid;
+		con = new dbConnection();
 		con.setRs(sql);
-		userInfoRS = con.getRs();
-		return userInfoRS;
+
+		while(con.getRs().next()){
+			
+			uname = con.getRs().getString("uname");
+			email = con.getRs().getString("email");
+			gender = con.getRs().getString("gender");
+		}
+		con.getRs().close();
 	}
-	
+
 	public int numOfNoti(int _uid, String _time) throws SQLException{
 		int counter;
 		counter = 0;
@@ -31,5 +40,14 @@ public class userInfo {
 		}
 		con.getRs().close();
 		return counter;
+	}
+	public String getUname(){
+		return uname;
+	}
+	public String getEmail(){
+		return email;
+	}
+	public String getGender(){
+		return gender;
 	}
 }
