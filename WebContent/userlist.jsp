@@ -11,8 +11,9 @@
 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Insert title here</title>
+		<title>TAH-Dashboard</title>
 	</head>
+
 	<body>
 		<form method = "GET" action = "/tah-dashboard/Notification" >
 			<table border = 1>
@@ -21,31 +22,10 @@
 					<th>User List</th>
 				</tr>
 				<tr>
-					<td>
-						<div class = "userlist" style="color:#000000">
-							
-								<%	
-									dbConnection con = new dbConnection();
-
-									String sqlStatement = "SELECT * FROM topics LEFT JOIN talkers ON talkers.uid = topics.uid ORDER BY topics.creation_date";
-									con.setRs(sqlStatement);
-
-									while(con.getRs().next()){
-								%>
-										<br>
-										<input type = "radio" name = "conversation" value = "<%= con.getRs().getObject("topic_id") %>">
-								<%
-										out.println(con.getRs().getObject("topics.topic") + " was created by " + con.getRs().getObject("topics.uid") + " on " + con.getRs().getObject("topics.creation_date") +"</br>");
-										out.println("<br>User name:   " + con.getRs().getObject("talkers.uname") + "</br>");
-										out.println("<br>Gender:   " + con.getRs().getObject("talkers.gender") + "</br>");
-									}
-									
-								
-								%>
-							
-						</div>
-					</td>  			
-					<td>
+					<th>
+						Notifications need to be sent to following conversations:
+					</th>
+					<td valign = "top" rowspan = "4">
 						<div class = "userlist" style="color:#000000">
 							
 								<%	
@@ -56,8 +36,6 @@
 
 									String sqlStatement2 = "SELECT *, MAX(noti_history.noti_time) FROM talkers LEFT JOIN noti_history ON talkers.uid = noti_history.uid GROUP BY talkers.uid ORDER BY MAX(noti_history.noti_time)";
 									con2.setRs(sqlStatement2);
-									
-									System.out.println("Listing User Info......");
 									while(con2.getRs().next()){
 										uInfo = new userInfo();
 
@@ -71,13 +49,83 @@
 										period = ((new Timestamp(date.getTime())).getYear() + 1900) + "-" + ((new Timestamp(date.getTime())).getMonth() + 1) + "-" + ((new Timestamp(date.getTime())).getDate()  - 1) + " " + (new Timestamp(date.getTime())).getHours() + ":" + (new Timestamp(date.getTime())).getMinutes() + ":" + (new Timestamp(date.getTime())).getSeconds();
 										out.println("<br> " + con2.getRs().getObject("uname") + " has been notified " + uInfo.numOfNoti(con2.getRs().getInt("uid"), period) + " times in past 24 hours.");		
 									}
-									
+									con2.getRs().close();
 								%>
 								
 							
 						</div>
 					</td>
 				</tr>
+				<tr>
+
+					<td>
+						<div class = "topics_1" style="color:#000000">
+							
+								<%	
+									dbConnection con = new dbConnection();
+
+									String sqlStatement = "SELECT DISTINCT topics.topic_id, topics.*, noti_history.noti_time, talkers.* FROM topics LEFT JOIN noti_history ON topics.topic_id = noti_history.topic_id LEFT JOIN talkers ON topics.uid = talkers.uid WHERE noti_history.noti_time is null ORDER BY topics.creation_date";
+									con.setRs(sqlStatement);
+
+									while(con.getRs().next()){
+								%>
+										<br>
+										<input type = "radio" name = "conversation" value = "<%= con.getRs().getObject("topic_id") %>">
+								<%
+										
+										out.println(con.getRs().getObject("topics.topic") + " was created by " + con.getRs().getObject("topics.uid") + " on " + con.getRs().getObject("topics.creation_date") +"</br>");
+										out.println("<br>User name:   " + con.getRs().getObject("talkers.uname") + "</br>");
+										out.println("<br>Gender:   " + con.getRs().getObject("talkers.gender") + "</br>");
+									}
+									con.getRs().close();
+								
+								%>
+							
+						</div>
+					</td>  			
+
+				</tr>
+				<tr>
+					<th>
+						Notifications have been sent to following conversations:
+					</th>
+				</tr>
+				<tr>
+					<td>
+						<div class = "topics_2" style="color:#000000">
+							
+								<%	
+									dbConnection con3 = new dbConnection();
+
+									String sqlStatement3 = "SELECT DISTINCT topics.*, noti_history.noti_time, talkers.* FROM topics RIGHT JOIN noti_history ON topics.topic_id = noti_history.topic_id LEFT JOIN talkers ON topics.uid = talkers.uid WHERE noti_history.noti_time is not null GROUP BY topics.topic_id ORDER BY topics.creation_date";
+									con3.setRs(sqlStatement3);
+
+									while(con3.getRs().next()){
+								%>
+										<br>
+										<input type = "radio" name = "conversation" value = "<%= con3.getRs().getObject("topic_id") %>">
+								<%
+										dbConnection con4 = new dbConnection();
+										String sqlStatement4 = "SELECT COUNT(*) FROM topics RIGHT JOIN noti_history ON topics.topic_id = noti_history.topic_id WHERE topics.topic_id = " + con3.getRs().getInt("topics.topic_id");
+										con4.setRs(sqlStatement4);
+										out.println(con3.getRs().getObject("topics.topic") + " was created by " + con3.getRs().getObject("topics.uid") + " on " + con3.getRs().getObject("topics.creation_date") +"</br>");
+										while(con4.getRs().next()){
+											out.println("<br>Topic " + con3.getRs().getObject("topics.topic_id") + " has inviteed " + con4.getRs().getInt("COUNT(*)") + " people</br>");
+										
+										}
+										out.println("<br>User name:   " + con3.getRs().getObject("talkers.uname") + "</br>");
+										out.println("<br>Gender:   " + con3.getRs().getObject("talkers.gender") + "</br>");
+										
+									}
+									con3.getRs().close();
+								
+								%>
+							
+						</div>
+						
+					</td>
+				</tr>
+				
 			</table>
 			<input type = "submit" value = "Send Notifications">
 		</form>

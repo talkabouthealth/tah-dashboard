@@ -1,40 +1,25 @@
 <?xml version = "1.0" ?>
-<project name = "tah-dashboard" basedir = "." default = "move">
-	<target name = "init" description = "perset all pathes of directories" >
-		<property name = "buildDir" value = "${basedir}/build" />
-		<property name = "classesDir" value = "${buildDir}/classes" />
-		<property name = "webDir" value = "${basedir}/WebContent" />
-		<property name = "srcDir" value = "${basedir}/src" />
-		<property name = "libDir" value = "${basedir}/WebContent/WEB-INF/lib" />
-		<property name = "pubDir" value = "/usr/local/tomcat/webapps/tah-dashboard" />
-		<path id = "compileClasspath">
-			<fileset dir = "${libDir}" />
-			<fileset dir = "/usr/local/tomcat/lib" />
-		</path>
-	</target>
-	<target name ="clean" depends = "init" description = "clean everything">
-		<delete dir = "${buildDir}" />
-		<delete dir = "${webDir}/WEB-INF/classes" />
-		<delete dir = "${pubDir}" />
-		
-	</target>
+<project name = "tah-dashboard" basedir = "." default = "compile">
+
+	<!-- set global properties for this build -->
+	<property name="BASE" location="/base"/>
+	<property name="src" location="./src"/>
+	<property name="build" location="./WebContent/WEB-INF/classes"/>	  
+	<property name = "libDir" value = "${basedir}/WebContent/WEB-INF/lib" />
+	<path id = "compileClasspath">
+		<fileset dir = "${libDir}" />
+		<fileset dir = "${BASE}/servers/apache-tomcat-6.0.26/lib" />
+	</path>
+
+<target name="clean" description="Clean output directories">
+    <!-- Delete the ${build} directory trees -->
+    <delete dir="${build}"/>
+	<mkdir dir="${build}"/>
+</target>
+
 	<target name = "compile" depends = "clean" description = "compile all .java">
-		<mkdir dir = "${buildDir}" />
-		<mkdir dir = "${classesDir}" />
-		<javac srcdir = "${srcDir}" destdir = "${classesDir}" debug = "true">
+		<javac srcdir = "${src}" destdir = "${build}" debug = "true">
 			<classpath refid = "compileClasspath" />
 		</javac>
-		<copy todir = "${webDir}/WEB-INF">
-			<fileset dir = "${buildDir}" >
-				<include name = "**/*.class" />
-			</fileset>
-		</copy>
-	</target>
-	<target name = "move" depends = "compile">
-		<copy todir = "${pubDir}">
-			<fileset dir = "${webDir}">
-				<include name = "**/*.*" />
-			</fileset>
-		</copy>	
 	</target>
 </project>
