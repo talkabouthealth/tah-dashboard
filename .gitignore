@@ -1,4 +1,7 @@
+WebContent/WEB-INF/classes/*
+WebContent/WEB-INF/lib/tah-im.jar
 build/*
+*.class
 .*
 *~
 !.gitignore

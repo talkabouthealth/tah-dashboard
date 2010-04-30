@@ -70,6 +70,7 @@ public class Notification extends HttpServlet {
 		}
 		IMNotifier IM = new IMNotifier();
 		
+
 		IM.Broadcast(email, _uid, _tid);
 
 		response.sendRedirect("./dashboard.jsp");
