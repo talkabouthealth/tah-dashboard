@@ -69,7 +69,9 @@ public class Notification extends HttpServlet {
 			 System.out.println(email[i] + " " + _uid[i]);
 		}
 		IMNotifier IM = new IMNotifier();
+		
 		IM.Broadcast(email, _uid, _tid);
-		response.sendRedirect("./userlist.jsp");
+
+		response.sendRedirect("./dashboard.jsp");
 	}
 }

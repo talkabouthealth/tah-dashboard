@@ -5,7 +5,7 @@
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import ="java.lang.Object.*" %>
 <%@ page import="com.tah.dashboard.*"%>
-
+<%@ page import="com.tah.im.IMNotifier" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
@@ -25,41 +25,12 @@
 					<th>
 						Notifications need to be sent to following conversations:
 					</th>
-					<td valign = "top" rowspan = "4">
-						<div class = "userlist" style="color:#000000">
-							
-								<%	
-									String sqlStatement2 = "SELECT talkers.*, MAX(noti_history.noti_time) FROM talkers LEFT JOIN noti_history ON talkers.uid = noti_history.uid GROUP BY talkers.uid ORDER BY MAX(noti_history.noti_time)";
-									dbConnection con2 = new dbConnection(sqlStatement2);
-									java.util.Date date= new java.util.Date();
-									userInfo uInfo;
-									String period;
-
-									
-									
-									while(con2.getRs().next()){
-										uInfo = new userInfo();
-								%>
-								<br>
-								<input type = "checkbox" name = "user_id" value = "<%= con2.getRs().getInt("uid") %>"> 
-								<%	
-											out.println(con2.getRs().getString("uname") + " has account of " + con2.getRs().getString("email") + "</br>");
-											out.println("<br> Last notified on: " + con2.getRs().getTimestamp("MAX(noti_history.noti_time)") + "</br>");
-											out.println("<br> current time: " + (new Timestamp(date.getTime())) + "</br>");
-											period = ((new Timestamp(date.getTime())).getYear() + 1900) + "-" + ((new Timestamp(date.getTime())).getMonth() + 1) + "-" + ((new Timestamp(date.getTime())).getDate()  - 1) + " " + (new Timestamp(date.getTime())).getHours() + ":" + (new Timestamp(date.getTime())).getMinutes() + ":" + (new Timestamp(date.getTime())).getSeconds();
-											out.println("<br> " + con2.getRs().getString("uname") + " has been notified " + uInfo.numOfNoti(con2.getRs().getInt("uid"), period) + " times in past 24 hours.");
-
-									}
-									con2.getRs().close();
-								%>
-								
-							
-						</div>
-					</td>
+					<th>
+						Online Users:
+					</th>
 				</tr>
 				<tr>
-
-					<td>
+									<td>
 						<div class = "topics_1" style="color:#000000">
 							
 								<%	
@@ -83,12 +54,56 @@
 								%>
 							
 						</div>
-					</td>  			
+					</td> 
+					<td valign = "top" rowspan = "2">
+						<div class = "userlist" style="color:#000000">
+							
+								<%	
+									String sqlStatement2 = "SELECT talkers.*, MAX(noti_history.noti_time) FROM talkers LEFT JOIN noti_history ON talkers.uid = noti_history.uid GROUP BY talkers.uid ORDER BY MAX(noti_history.noti_time)";
+									dbConnection con2 = new dbConnection(sqlStatement2);
+									java.util.Date date= new java.util.Date();
+									userInfo uInfo;
+									String period;
+
+									IMNotifier IM = new IMNotifier();
+									
+									
+									while(con2.getRs().next()){
+										uInfo = new userInfo();
+										
+								%>
+								<br>
+								<input type = "checkbox" name = "user_id" value = "<%= con2.getRs().getInt("uid") %>"> 
+								<%	
+									
+											out.println(con2.getRs().getString("uname") + " has account of " + con2.getRs().getString("email") + "</br>");
+											if(IM.isUserOnline(con2.getRs().getString("email"))){
+												out.println("<br>" + con2.getRs().getString("uname") + " is online </br>");
+												
+											} else {
+												out.println("<br>" + con2.getRs().getString("uname") + " is NOT online </br>");
+											}
+											
+											
+									}
+									con2.getRs().close();
+								%>
+								
+								
+						</div>
+					</td>
+				</tr>
+				<tr>
+
+ 			
 
 				</tr>
 				<tr>
 					<th>
 						Notifications have been sent to following conversations:
+					</th>
+					<th>
+						Offline users:
 					</th>
 				</tr>
 				<tr>
@@ -124,6 +139,8 @@
 							
 						</div>
 						
+					</td>
+					<td>
 					</td>
 				</tr>
 				
