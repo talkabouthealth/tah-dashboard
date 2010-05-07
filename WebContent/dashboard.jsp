@@ -13,7 +13,7 @@
 		<title>Insert title here</title>
 	</head>
 	<body>
-		<form method = "GET" action = "/tah-dashboard/Notification" >
+		<form method = "POST" action = "/tah-dashboard/Notification" >
 			<table>
 				<tr>
 					<td valign = "top">
@@ -35,6 +35,7 @@
 									%>
 											<br>
 											<input type = "radio" name = "conversation" value = "<%= con.getRs().getObject("topic_id") %>">
+											<input type = "hidden" name = "conversationOwner" value = "<%= con.getRs().getString("uname") %>">
 									<%
 											
 											out.println(con.getRs().getObject("topics.topic") + " was created by " + con.getRs().getObject("topics.uid") + " on " + con.getRs().getObject("topics.creation_date") +"</br>");
@@ -42,7 +43,6 @@
 											out.println("<br>Gender:   " + con.getRs().getObject("talkers.gender") + "</br>");
 										}
 										con.getRs().close();
-									
 									%>
 										</td>   
 									</tr>
@@ -54,7 +54,6 @@
 										<td>
 									<%	
 										dbConnection con3 = new dbConnection();
-	
 										String sqlStatement3 = "SELECT DISTINCT topics.*, noti_history.noti_time, talkers.* FROM topics RIGHT JOIN noti_history ON topics.topic_id = noti_history.topic_id LEFT JOIN talkers ON topics.uid = talkers.uid WHERE noti_history.noti_time is not null GROUP BY topics.topic_id ORDER BY topics.creation_date";
 										con3.setRs(sqlStatement3);
 	
