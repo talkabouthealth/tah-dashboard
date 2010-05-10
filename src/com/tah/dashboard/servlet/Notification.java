@@ -30,13 +30,12 @@ public class Notification extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response){
 		// TODO Auto-generated method stub
-				try {
-					passGetData(request, response);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			
+		try {
+			passGetData(request, response);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -100,6 +99,6 @@ public class Notification extends HttpServlet {
 
 		IM.Broadcast(email, _uid, _tid);
 
-//		response.sendRedirect("./dashboard.jsp");
+		response.sendRedirect("./dashboard.jsp");
 	}
 }
