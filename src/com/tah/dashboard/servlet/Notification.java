@@ -30,15 +30,13 @@ public class Notification extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response){
 		// TODO Auto-generated method stub
-		/*
-		response.encodeRedirectURL("userlist.jsp");
 				try {
-					passData(request, response);
+					passGetData(request, response);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			*/
+			
 	}
 
 	/**
@@ -47,13 +45,35 @@ public class Notification extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		try {
-			passData(request, response);
+			passPostData(request, response);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	private void passData(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	private void passPostData(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		// TODO Auto-generated method stub
+		System.out.println(request.getParameter("convTid").toString());
+		System.out.println(request.getParameter("convOwner").toString());
+		System.out.println(request.getParameter("convTopic").toString());
+		String _uId_s [] = request.getParameterValues("userId"); 
+		String _uMail [] = request.getParameterValues("userEmail"); 
+		int _tId = Integer.valueOf(request.getParameter("convTid").toString());
+		int _uId [] = new int [_uId_s.length];
+		for(int i = 0; i < _uId.length; i++){
+			_uId[i] = Integer.valueOf(_uId_s[i]);
+			System.out.println(_uMail[i] + " has uid of " + _uId[i]);
+		}
+		
+		IMNotifier IM = new IMNotifier();
+
+		IM.Broadcast(_uMail, _uId, _tId);
+		response.sendRedirect("./userlist.jsp");
+	}
+
+	private void passGetData(HttpServletRequest request, HttpServletResponse response) throws Exception{
+
+		
 		String UID_S [] = request.getParameterValues("user_id");
 		String _tid_s;
 		int _tid;
@@ -74,6 +94,7 @@ public class Notification extends HttpServlet {
 			 }
 			 System.out.println(email[i] + " " + _uid[i]);
 		}
+		
 		IMNotifier IM = new IMNotifier();
 		
 

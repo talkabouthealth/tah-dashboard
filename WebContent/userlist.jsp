@@ -10,7 +10,7 @@
 <html>
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Insert title here</title>
+	<title>Insert title here</title>
 
  	<script src="http://code.jquery.com/jquery-latest.js"></script>
   	<script>
@@ -19,6 +19,7 @@
   	var convTopic = "";
   	var userId = new Array();
   	var userEmail = new Array;
+  	var param = "";
   	function addConversationInfo(_convTid, _convOwner, _convTopic){
   	  	convTid = _convTid;
   	  	convOwner = _convOwner;
@@ -43,20 +44,48 @@
 				userEmail.push(_userEmail);				
 			}		
 		}
-
-		show();
-		
+		show();	
 	}
   	function show(){
 		
 	  	$("#results").html(convTid + " " + convOwner + " " + convTopic + "<br />" + userId + "<br />" + userEmail + "<br />" + userId.length);
 	}
-
+	function sendtoservlet(){
+		var param = setParam();
+		var xmlhttp = createHttpObj();
+		xmlhttp.open("POST","Notification",true);
+		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		xmlhttp.send(param);
+	}
+	function setParam(){
+		param = "convTid=" + convTid + "&convOwner=" + convOwner + "&convTopic=" + convTopic;
+		for(i = 0; i < userId.length; i++){
+			param = param + "&userId=" + userId[i];
+		}
+		for(j = 0; j < userEmail.length; j++){
+			param = param + "&userEmail=" + userEmail[j];
+		}
+		return param; 
+	}
+	function createHttpObj(){
+		if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		}
+		else{// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		xmlhttp.onreadystatechange=function(){
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+				window.location.reload();
+		    }
+		};
+		return xmlhttp;
+	}
 	</script>
 	</head>
 	<body>
 		<p><tt id="results"></tt></p>
-		<form method = "POST" action = "/tah-dashboard/Notification" >
+
 			<table>
 				<tr>
 					<td valign = "top">
@@ -200,8 +229,8 @@
 					</td>
 				</tr>
 			</table>
-			<input type = "submit" value = "Send Notifications">
-		</form>
+	
+			<button type="button" onclick="sendtoservlet()">Send Notifications</button>
 
 	</body>
 </html>
