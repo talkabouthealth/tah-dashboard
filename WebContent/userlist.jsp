@@ -17,9 +17,16 @@
   	var convTid = "";
   	var concOwner = "";
   	var convTopic = "";
+  	var previousLatestTopicId = 0;
   	var userId = new Array();
   	var userEmail = new Array;
   	var param = "";
+  	setInterval("checkLatestTopic()", 5000);
+  	function checkLatestTopic(){
+		var xmlhttp = createHttpObj();
+		xmlhttp.open("GET", "newTopicAlert", true);
+		xmlhttp.send();
+  	}
   	function addConversationInfo(_convTid, _convOwner, _convTopic){
   	  	convTid = _convTid;
   	  	convOwner = _convOwner;
@@ -47,8 +54,8 @@
 		show();	
 	}
   	function show(){
-		
-	  	$("#results").html(convTid + " " + convOwner + " " + convTopic + "<br />" + userId + "<br />" + userEmail + "<br />" + userId.length);
+	  	$("#results").html(convTid + " " + convOwner + " " + convTopic + "<br />" + userId + "<br />" + userEmail + "<br />" + "You've chosen " + userId.length + " users.");
+	 
 	}
 	function sendtoservlet(){
 		var param = setParam();
@@ -56,6 +63,7 @@
 		xmlhttp.open("POST","Notification",true);
 		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		xmlhttp.send(param);
+
 	}
 	function setParam(){
 		param = "convTid=" + convTid + "&convOwner=" + convOwner + "&convTopic=" + convTopic;
@@ -76,20 +84,28 @@
 		}
 		xmlhttp.onreadystatechange=function(){
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
-				window.location.reload();
-		    }
-		};
+				currentTopicId = xmlhttp.responseText;	
+				if(previousLatestTopicId == 0){
+					previousLatestTopicId = currentTopicId;
+					$("#alert").text("There are no new topics... pre = " + previousLatestTopicId + " current = " + currentTopicId);
+				}else if(currentTopicId > previousLatestTopicId && previousLatestTopicId != 0){
+//					window.alert("You got a new topic!!!" + previousLatestTopicId);
+					$("#alert").text("You got a new topic!!!" + " currentTopicId is " + currentTopicId + " and previoustopicid is "+ previousLatestTopicId);
+					previousLatestTopicId = currentTopicId;
+				}
+		    }
+		};	
 		return xmlhttp;
 	}
 	</script>
 	</head>
 	<body>
 		<p><tt id="results"></tt></p>
-
+		<p><tt id="alert"></tt></p>
 			<table>
 				<tr>
 					<td valign = "top">
-						<div>
+						<div id = "topiclist">
 							<table border = "1">
 								<tr>
 									<th>Topics list 1
@@ -156,7 +172,7 @@
 						</div>
 					</td>
 					<td valign = "top">
-						<div>
+						<div id = "userlist">
 							<table border = "1">
 								<tr>
 									<th> Online Users
@@ -180,7 +196,7 @@
 											if(IM.isUserOnline(con2.getRs().getString("email"))){
 									%>
 												<br> 
-												<input type = "checkbox" name = "user_id" value = "<%= con2.getRs().getInt("uid") %>"> 
+												<input type = "checkbox" name = "user_id" value = "<%= con2.getRs().getInt("uid") %>" onclick = "addUserInfo('<%= con2.getRs().getObject("uid") %>', '<%= con2.getRs().getObject("email") %>')"> 
 									<%
 												out.println(con2.getRs().getString("uname") + " has account of " + con2.getRs().getString("email") + "</br>");
 												out.println("<br>" + con2.getRs().getString("uname") + " is online </br>");

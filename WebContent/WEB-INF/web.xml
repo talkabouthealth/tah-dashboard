@@ -19,4 +19,14 @@
     <servlet-name>Notification</servlet-name>
     <url-pattern>/Notification</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>newTopicAlert</display-name>
+    <servlet-name>newTopicAlert</servlet-name>
+    <servlet-class>com.tah.dashboard.servlet.newTopicAlert</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>newTopicAlert</servlet-name>
+    <url-pattern>/newTopicAlert</url-pattern>
+  </servlet-mapping>
 </web-app>
