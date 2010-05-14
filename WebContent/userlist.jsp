@@ -21,10 +21,34 @@
   	var userId = new Array();
   	var userEmail = new Array;
   	var param = "";
+	function createHttpObj(){
+		if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		}
+		else{// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		return xmlhttp;
+	}
+	
   	setInterval("checkLatestTopic()", 5000);
+  	
   	function checkLatestTopic(){
-		var xmlhttp = createHttpObj();
+  		var xmlhttp = createHttpObj();
 		xmlhttp.open("GET", "newTopicAlert", true);
+		xmlhttp.onreadystatechange=function(){
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+				currentTopicId = xmlhttp.responseText;	
+				if(previousLatestTopicId == 0){
+					previousLatestTopicId = currentTopicId;
+					$("#alert").text("There are no new topics... pre = " + previousLatestTopicId + " current = " + currentTopicId);
+				}else if(currentTopicId > previousLatestTopicId && previousLatestTopicId != 0){
+//					window.alert("You got a new topic!!!" + previousLatestTopicId);
+					$("#alert").text("You got a new topic!!!" + " currentTopicId is " + currentTopicId + " and previoustopicid is "+ previousLatestTopicId);
+					previousLatestTopicId = currentTopicId;
+				}
+		    }
+		};	
 		xmlhttp.send();
   	}
   	function addConversationInfo(_convTid, _convOwner, _convTopic){
@@ -57,13 +81,18 @@
 	  	$("#results").html(convTid + " " + convOwner + " " + convTopic + "<br />" + userId + "<br />" + userEmail + "<br />" + "You've chosen " + userId.length + " users.");
 	 
 	}
+	
 	function sendtoservlet(){
 		var param = setParam();
-		var xmlhttp = createHttpObj();
-		xmlhttp.open("POST","Notification",true);
-		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		xmlhttp.send(param);
-
+		var httprequest = createHttpObj();
+		httprequest.open("POST","Notification",true);
+		httprequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		httprequest.onreadystatechange=function(){
+			if (httprequest.readyState == 4 && httprequest.status == 200){
+				window.location.reload();
+		    }
+		};	
+		httprequest.send(param);
 	}
 	function setParam(){
 		param = "convTid=" + convTid + "&convOwner=" + convOwner + "&convTopic=" + convTopic;
@@ -75,28 +104,7 @@
 		}
 		return param; 
 	}
-	function createHttpObj(){
-		if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
-			xmlhttp = new XMLHttpRequest();
-		}
-		else{// code for IE6, IE5
-			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		xmlhttp.onreadystatechange=function(){
-			if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
-				currentTopicId = xmlhttp.responseText;	
-				if(previousLatestTopicId == 0){
-					previousLatestTopicId = currentTopicId;
-					$("#alert").text("There are no new topics... pre = " + previousLatestTopicId + " current = " + currentTopicId);
-				}else if(currentTopicId > previousLatestTopicId && previousLatestTopicId != 0){
-//					window.alert("You got a new topic!!!" + previousLatestTopicId);
-					$("#alert").text("You got a new topic!!!" + " currentTopicId is " + currentTopicId + " and previoustopicid is "+ previousLatestTopicId);
-					previousLatestTopicId = currentTopicId;
-				}
-		    }
-		};	
-		return xmlhttp;
-	}
+
 	</script>
 	</head>
 	<body>
