@@ -227,7 +227,7 @@
 									<td>
 									<%
 										con2.getRs().first();
-										while(con2.getRs().next()){
+										do{
 											uInfo = new userInfo();
 																														
 											if(!IM.isUserOnline(con2.getRs().getString("email"))){
@@ -243,7 +243,7 @@
 												out.println("<br> " + con2.getRs().getObject("uname") + " has been notified " + uInfo.numOfNoti(con2.getRs().getInt("uid"), period) + " times in past 24 hours.");		
 												
 											} 											
-										}
+										}while(con2.getRs().next());
 										con2.getRs().close();
 									%>
 									</td>   
