@@ -78,8 +78,8 @@
 		show();	
 	}
   	function show(){
-	  	$("#results").html(convTid + " " + convOwner + " " + convTopic + "<br />" + userId + "<br />" + userEmail + "<br />" + "You've chosen " + userId.length + " users.");
-	 
+//	  	$("#results").html(convTid + " " + convOwner + " " + convTopic + "<br />" + userId + "<br />" + userEmail + "<br />" + "You've chosen " + userId.length + " users.");
+		$("#results").html("You've selected " + userId.length + " users to join conversation(" + convTid + ").");	 
 	}
 	
 	function sendtoservlet(){
