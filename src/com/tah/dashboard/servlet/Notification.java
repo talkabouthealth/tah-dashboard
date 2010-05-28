@@ -63,8 +63,8 @@ public class Notification extends HttpServlet {
 			_uId[i] = Integer.valueOf(_uId_s[i]);
 			System.out.println(_uMail[i] + " has uid of " + _uId[i]);
 		}
-		
-		IMNotifier IM = new IMNotifier();
+		IMNotifier IM = IMNotifier.getInstance();
+
 
 		IM.Broadcast(_uMail, _uId, _tId);
 		response.sendRedirect("./userlist.jsp");
@@ -94,7 +94,7 @@ public class Notification extends HttpServlet {
 			 System.out.println(email[i] + " " + _uid[i]);
 		}
 		
-		IMNotifier IM = new IMNotifier();
+		IMNotifier IM = IMNotifier.getInstance();
 		
 
 		IM.Broadcast(email, _uid, _tid);

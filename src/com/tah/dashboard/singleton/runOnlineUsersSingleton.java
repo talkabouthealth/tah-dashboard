@@ -1,5 +1,7 @@
 package com.tah.dashboard.singleton;
 
+import com.tah.im.IMNotifier;
+
 
 
 public class runOnlineUsersSingleton implements Runnable {
@@ -7,8 +9,7 @@ public class runOnlineUsersSingleton implements Runnable {
 	{
 		System.out.println("***Preparing Online User List");
 		System.out.println("Initiating Live Conversation Data Structure!");
-		onlineUsersSingleton ous = onlineUsersSingleton.getInstance();
-		
+		IMNotifier ous = IMNotifier.getInstance();
 		System.out.println("***OnlineUser List Ready");
 		
 		boolean run = true;

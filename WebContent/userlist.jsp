@@ -6,6 +6,7 @@
 <%@ page import="java.lang.Object.*" %>
 <%@ page import="com.tah.dashboard.*"%>
 <%@ page import="com.tah.im.IMNotifier" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -195,8 +196,16 @@
 										userInfo uInfo;
 										String period;
 	
-										IMNotifier IM = new IMNotifier();
-										
+										IMNotifier IM = IMNotifier.getInstance();
+										List<String> onlineUsers = IM.getSession().getOnlineContacts(IM.getMainAcc());
+					
+										for(int i = 0; i < onlineUsers.size(); i++){
+									%>
+											<br> 
+											<input type = "checkbox" name = "user_id" value = "<%= onlineUsers.get(i) %>" > 
+									<%	
+											out.println(onlineUsers.get(i) + " </br>");
+										}										
 										
 										while(con2.getRs().next()){
 											uInfo = new userInfo();
@@ -216,6 +225,7 @@
 											} 
 											
 										}
+										
 									%>								
 									</td>   
 								</tr>

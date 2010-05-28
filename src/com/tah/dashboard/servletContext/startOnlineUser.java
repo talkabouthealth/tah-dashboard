@@ -8,8 +8,8 @@ import com.tah.dashboard.singleton.runOnlineUsersSingleton;
 
 public class startOnlineUser implements ServletContextListener{
 	public void contextInitialized (ServletContextEvent sce){
-		System.out.println("***Starting Talkmi Thread!!!");
-		Thread tRunTalkmi = new Thread(new runOnlineUsersSingleton(), "RunTalkmiThread");
+		System.out.println("***Starting IMNotifier Thread!!!");
+		Thread tRunTalkmi = new Thread(new runOnlineUsersSingleton(), "runOnlineUsersSingleton");
     	tRunTalkmi.start();
     }
 	public void contextDestroyed(ServletContextEvent sce){
