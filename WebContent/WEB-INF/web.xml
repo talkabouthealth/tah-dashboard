@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
   <display-name>tah-dashboard</display-name>
+  <listener>
+    <listener-class>com.tah.dashboard.servletContext.startOnlineUser</listener-class>
+  </listener>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -19,6 +22,14 @@
     <servlet-name>Notification</servlet-name>
     <url-pattern>/Notification</url-pattern>
   </servlet-mapping>
+   <servlet>
+   	<servlet-name>runOnlineUsersSingleton</servlet-name>
+   	<servlet-class>com.tah.dashboard.singleton.runOnlineUsersSingleton</servlet-class>
+   </servlet>
+   <servlet-mapping>
+   	<servlet-name>runOnlineUsersSingleton</servlet-name>
+   	<url-pattern>/runOnlineUsersSingleton</url-pattern>
+   </servlet-mapping>
   <servlet>
     <description></description>
     <display-name>newTopicAlert</display-name>

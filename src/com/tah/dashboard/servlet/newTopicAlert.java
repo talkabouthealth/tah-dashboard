@@ -74,9 +74,7 @@ public class newTopicAlert extends HttpServlet {
 		request.setAttribute("currentLatestTopic", lastTopicId);
 		response.setContentType("text/html"); 
         PrintWriter out = response.getWriter(); 
-        out.println(lastTopicId);
-        System.out.println(lastTopicId);
-		
+        out.println(lastTopicId);		
 	}
 
 }
