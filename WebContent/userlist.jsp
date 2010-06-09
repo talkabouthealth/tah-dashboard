@@ -6,7 +6,12 @@
 <%@ page import="java.lang.Object.*" %>
 <%@ page import="com.tah.dashboard.*"%>
 <%@ page import="com.tah.im.IMNotifier" %>
+<%@ page import="com.tah.im.userInfo" %>
+<%@ page import="com.tah.im.onlineUsersSingleton" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Collection" %>
+<%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.Map" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -198,13 +203,13 @@
 	
 										IMNotifier IM = IMNotifier.getInstance();
 										List<String> onlineUsers = IM.getSession().getOnlineContacts(IM.getMainAcc());
-					
+										
 										for(int i = 0; i < onlineUsers.size(); i++){
 									%>
 											<br> 
 											<input type = "checkbox" name = "user_id" value = "<%= onlineUsers.get(i) %>" > 
 									<%	
-											out.println(onlineUsers.get(i) + " </br>");
+											out.println(onlineUsers.get(i) + "(" + onlineUsers.size() + ")" + " </br>");
 										}										
 										
 										while(con2.getRs().next()){
@@ -236,25 +241,24 @@
 								<tr>
 									<td>
 									<%
-										con2.getRs().first();
-										do{
-											uInfo = new userInfo();
-																														
-											if(!IM.isUserOnline(con2.getRs().getString("email"))){
-												%>
-												<br> 
-												<input type = "checkbox" name = "user_id" value = "<%= con2.getRs().getInt("uid") %>" onclick = "addUserInfo('<%= con2.getRs().getObject("uid") %>', '<%= con2.getRs().getObject("email") %>')"> 
-												<%
-												out.println(con2.getRs().getString("uname") + " has account of " + con2.getRs().getString("email") + "</br>");
-												out.println("<br>" + con2.getRs().getString("uname") + " is NOT online </br>");
-												out.println("<br> Last notified on: " + con2.getRs().getTimestamp("MAX(noti_history.noti_time)") + "</br>");
-//												out.println("<br> current time: " + (new Timestamp(date.getTime())) + "</br>");
-												period = ((new Timestamp(date.getTime())).getYear() + 1900) + "-" + ((new Timestamp(date.getTime())).getMonth() + 1) + "-" + ((new Timestamp(date.getTime())).getDate()  - 1) + " " + (new Timestamp(date.getTime())).getHours() + ":" + (new Timestamp(date.getTime())).getMinutes() + ":" + (new Timestamp(date.getTime())).getSeconds();
-												out.println("<br> " + con2.getRs().getObject("uname") + " has been notified " + uInfo.numOfNoti(con2.getRs().getInt("uid"), period) + " times in past 24 hours.");		
-												
-											} 											
-										}while(con2.getRs().next());
-										con2.getRs().close();
+									Map<String, userInfo> oui = onlineUsersSingleton.getInstance();
+									Collection collection = oui.values();
+									Iterator iterator = collection.iterator();
+									out.println("List");
+									while(iterator.hasNext()){
+										userInfo uI = (userInfo) iterator.next();
+										%>
+											<br> 
+											<input type = "checkbox" name = "user_id" value = "<%= uI.getUid() %>" onclick = "addUserInfo('<%= uI.getUid() %>', '<%= uI.getEmail() %>')"> 
+										<%										
+										out.println(uI.getUname() + " has account of " + uI.getEmail() + "</br>");
+										out.println("<br>" + uI.getUname() + " is online </br>");
+										out.println("<br> Last notified on: " + uI.getlastNotiTime() + "</br>");
+//										out.println("<br> current time: " + (new Timestamp(date.getTime())) + "</br>");
+										period = ((new Timestamp(date.getTime())).getYear() + 1900) + "-" + ((new Timestamp(date.getTime())).getMonth() + 1) + "-" + ((new Timestamp(date.getTime())).getDate()  - 1) + " " + (new Timestamp(date.getTime())).getHours() + ":" + (new Timestamp(date.getTime())).getMinutes() + ":" + (new Timestamp(date.getTime())).getSeconds();
+										out.println("<br> " + uI.getUname() + " has been notified " + uI.getTimesBeenNoti() + " times in past 24 hours.");		
+										
+									}	
 									%>
 									</td>   
 								</tr>
