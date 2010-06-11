@@ -244,7 +244,7 @@
 									Map<String, userInfo> oui = onlineUsersSingleton.getInstance();
 									Collection collection = oui.values();
 									Iterator iterator = collection.iterator();
-									out.println("List");
+									out.println("List" + oui.size());
 									while(iterator.hasNext()){
 										userInfo uI = (userInfo) iterator.next();
 										%>
