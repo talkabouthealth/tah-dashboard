@@ -27,6 +27,12 @@
   	var userId = new Array();
   	var userEmail = new Array;
   	var param = "";
+  	var GOOGLE = new Array();
+  	var YAHOO = new Array();
+  	var MSN = new Array();
+  	var idGOOGLE = new Array();
+  	var idYAHOO = new Array();
+  	var idMSN = new Array();
 	function createHttpObj(){
 		if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
 			xmlhttp = new XMLHttpRequest();
@@ -63,50 +69,127 @@
   	  	convTopic = _convTopic;
   	  	show();
 	}
-	function addUserInfo(_userId, _userEmail){
+	function addUserInfo(_userId, _userEmail, _imType){
+		switch(_imType){
+		case "GoogleTalk":
+			addUserGOOGLE(_userId, _userEmail);
+			break;
+		case "WindowLive":
+			addUserMSN(_userId, _userEmail);
+			break;
+		case "YahooIM":
+			addUserYAHOO(_userId, _userEmail);
+			break;
+		default:
+			break;	
+		}
+	}
+
+	function addUserGOOGLE(_userId, _userEmail){
 		var exist = 0;
-		if(userId.length == 0){
-			userId.push(_userId);
-			userEmail.push(_userEmail);
+		if(idGOOGLE.length == 0){
+			idGOOGLE.push(_userId);
+			GOOGLE.push(_userEmail);
 		}else{
-			for(i = 0; i < userId.length; i++){
-				if(userId[i] == _userId){
-					userId.splice(i, 1);
-					userEmail.splice(i, 1);
+			for(i = 0; i < idGOOGLE.length; i++){
+				if(idGOOGLE[i] == _userId){
+					idGOOGLE.splice(i, 1);
+					GOOGLE.splice(i, 1);
 					exist = 1;
 				}
 			}	
 			if(!exist){
-				userId.push(_userId);
-				userEmail.push(_userEmail);				
+				idGOOGLE.push(_userId);
+				GOOGLE.push(_userEmail);				
+			}		
+		}
+		show();	
+	}
+	function addUserMSN(_userId, _userEmail){
+		var exist = 0;
+		if(idMSN.length == 0){
+			idMSN.push(_userId);
+			MSN.push(_userEmail);
+		}else{
+			for(i = 0; i < idMSN.length; i++){
+				if(idMSN[i] == _userId){
+					idMSN.splice(i, 1);
+					MSN.splice(i, 1);
+					exist = 1;
+				}
+			}	
+			if(!exist){
+				idMSN.push(_userId);
+				MSN.push(_userEmail);				
+			}		
+		}
+		show();	
+	}
+	function addUserYAHOO(_userId, _userEmail){
+		var exist = 0;
+		if(idYAHOO.length == 0){
+			idYAHOO.push(_userId);
+			YAHOO.push(_userEmail);
+		}else{
+			for(i = 0; i < idYAHOO.length; i++){
+				if(idYAHOO[i] == _userId){
+					idYAHOO.splice(i, 1);
+					YAHOO.splice(i, 1);
+					exist = 1;
+				}
+			}	
+			if(!exist){
+				idYAHOO.push(_userId);
+				YAHOO.push(_userEmail);				
 			}		
 		}
 		show();	
 	}
   	function show(){
 //	  	$("#results").html(convTid + " " + convOwner + " " + convTopic + "<br />" + userId + "<br />" + userEmail + "<br />" + "You've chosen " + userId.length + " users.");
-		$("#results").html("You've selected " + userId.length + " users to join conversation(" + convTid + ").");	 
+		$("#results").html("You've selected " + (idGOOGLE.length + idYAHOO.length + idMSN.length) + " users to join conversation(" + convTid + "). <br>" + "Yahoo: " + idYAHOO.length + "<br> GOOGLE: " + idGOOGLE.length + "<br> MSN: " + idMSN.length + "<br>");	 
 	}
 	
 	function sendtoservlet(){
-		var param = setParam();
+		var param = setParam(idGOOGLE, GOOGLE);
+		var paramYahoo = setParam(idYAHOO, YAHOO);
+		var prarmMSN = setParam(idMSN, MSN);
 		var httprequest = createHttpObj();
+		var httprequestYahoo = createHttpObj();
+		var httprequestMSN = createHttpObj();
+		$("#results").html("GOOGLE: " + param + "<br> Yahoo: " + paramYahoo + "<br> MSN: " + prarmMSN);
 		httprequest.open("POST","Notification",true);
+		httprequestYahoo.open("POST","NotificationYAHOO",true);
+		httprequestMSN.open("POST","NotificationMSN",true);
 		httprequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		httprequestYahoo.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		httprequestMSN.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		httprequest.onreadystatechange=function(){
 			if (httprequest.readyState == 4 && httprequest.status == 200){
-				window.location.reload();
+				//window.location.reload();
+		    }
+		};	
+		httprequestYahoo.onreadystatechange=function(){
+			if (httprequestYahoo.readyState == 4 && httprequestYahoo.status == 200){
+			//	window.location.reload();
+		    }
+		};	
+		httprequestMSN.onreadystatechange=function(){
+			if (httprequestMSN.readyState == 4 && httprequestMSN.status == 200){
+				//window.location.reload();
 		    }
 		};	
 		httprequest.send(param);
+		httprequestYahoo.send(paramYahoo);
+		httprequestMSN.send(prarmMSN);
 	}
-	function setParam(){
+	function setParam(_userId, _userEmail){
 		param = "convTid=" + convTid + "&convOwner=" + convOwner + "&convTopic=" + convTopic;
-		for(i = 0; i < userId.length; i++){
-			param = param + "&userId=" + userId[i];
+		for(i = 0; i < _userId.length; i++){
+			param = param + "&userId=" + _userId[i];
 		}
-		for(j = 0; j < userEmail.length; j++){
-			param = param + "&userEmail=" + userEmail[j];
+		for(j = 0; j < _userEmail.length; j++){
+			param = param + "&userEmail=" + _userEmail[j];
 		}
 		return param; 
 	}
@@ -194,73 +277,36 @@
 								</tr>
 								<tr>
 									<td>
-									<%	
-										String sqlStatement2 = "SELECT talkers.*, MAX(noti_history.noti_time) FROM talkers LEFT JOIN noti_history ON talkers.uid = noti_history.uid GROUP BY talkers.uid ORDER BY MAX(noti_history.noti_time)";
-										dbConnection con2 = new dbConnection(sqlStatement2);
-										java.util.Date date= new java.util.Date();
-										userInfo uInfo;
-										String period;
-	
-										IMNotifier IM = IMNotifier.getInstance();
-										List<String> onlineUsers = IM.getSession().getOnlineContacts(IM.getMainAcc());
-										
-										for(int i = 0; i < onlineUsers.size(); i++){
-									%>
-											<br> 
-											<input type = "checkbox" name = "user_id" value = "<%= onlineUsers.get(i) %>" > 
-									<%	
-											out.println(onlineUsers.get(i) + "(" + onlineUsers.size() + ")" + " </br>");
-										}										
-										
-										while(con2.getRs().next()){
-											uInfo = new userInfo();
-	
-											if(IM.isUserOnline(con2.getRs().getString("email"))){
-									%>
-												<br> 
-												<input type = "checkbox" name = "user_id" value = "<%= con2.getRs().getInt("uid") %>" onclick = "addUserInfo('<%= con2.getRs().getObject("uid") %>', '<%= con2.getRs().getObject("email") %>')"> 
-									<%
-												out.println(con2.getRs().getString("uname") + " has account of " + con2.getRs().getString("email") + "</br>");
-												out.println("<br>" + con2.getRs().getString("uname") + " is online </br>");
-												out.println("<br> Last notified on: " + con2.getRs().getTimestamp("MAX(noti_history.noti_time)") + "</br>");
-//												out.println("<br> current time: " + (new Timestamp(date.getTime())) + "</br>");
-												period = ((new Timestamp(date.getTime())).getYear() + 1900) + "-" + ((new Timestamp(date.getTime())).getMonth() + 1) + "-" + ((new Timestamp(date.getTime())).getDate()  - 1) + " " + (new Timestamp(date.getTime())).getHours() + ":" + (new Timestamp(date.getTime())).getMinutes() + ":" + (new Timestamp(date.getTime())).getSeconds();
-												out.println("<br> " + con2.getRs().getObject("uname") + " has been notified " + uInfo.numOfNoti(con2.getRs().getInt("uid"), period) + " times in past 24 hours.");		
-																							
-											} 
-											
-										}
-										
-									%>								
-									</td>   
-								</tr>
-								<tr>
-									<th> Offlien Users
-									</th>   
-								</tr>
-								<tr>
-									<td>
 									<%
 									Map<String, userInfo> oui = onlineUsersSingleton.getInstance();
 									Collection collection = oui.values();
 									Iterator iterator = collection.iterator();
+									java.util.Date date= new java.util.Date();
+									String period;
 									out.println("List" + oui.size());
 									while(iterator.hasNext()){
 										userInfo uI = (userInfo) iterator.next();
 										%>
 											<br> 
-											<input type = "checkbox" name = "user_id" value = "<%= uI.getUid() %>" onclick = "addUserInfo('<%= uI.getUid() %>', '<%= uI.getEmail() %>')"> 
+											<input type = "checkbox" name = "user_id" value = "<%= uI.getUid() %>" onclick = "addUserInfo('<%= uI.getUid() %>', '<%= uI.getEmail() %>', '<%= uI.getIMType(uI.getUid()) %>')"> 
 										<%										
-										out.println(uI.getUname() + " has account of " + uI.getEmail() + "</br>");
-										out.println("<br>" + uI.getUname() + " is online </br>");
-										out.println("<br> Last notified on: " + uI.lastNotiTime(uI.getUid()) + "</br>");
+										out.println(uI.getUname() + " has account of " + uI.getEmail() + " with IM type of " + uI.getIMType(uI.getUid()));
+										out.println("<br>" + uI.getUname() + " is online");
+										out.println("<br> Last notified on: " + uI.lastNotiTime(uI.getUid()));
 //										out.println("<br> current time: " + (new Timestamp(date.getTime())) + "</br>");
 										period = ((new Timestamp(date.getTime())).getYear() + 1900) + "-" + ((new Timestamp(date.getTime())).getMonth() + 1) + "-" + ((new Timestamp(date.getTime())).getDate()  - 1) + " " + (new Timestamp(date.getTime())).getHours() + ":" + (new Timestamp(date.getTime())).getMinutes() + ":" + (new Timestamp(date.getTime())).getSeconds();
 										out.println("<br> " + uI.getUname() + " has been notified " + uI.numOfNoti(uI.getUid(), period) + " times in past 24 hours.");		
 										
 									}	
 									%>
-									</td>   
+									</td>    
+								</tr>
+								<tr>
+									<th> Offlien Users
+									</th>   
+								</tr>
+								<tr>
+
 								</tr>
 							</table>
 						</div>

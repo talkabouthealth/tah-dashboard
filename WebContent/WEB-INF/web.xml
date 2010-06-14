@@ -22,6 +22,26 @@
     <servlet-name>Notification</servlet-name>
     <url-pattern>/Notification</url-pattern>
   </servlet-mapping>
+    <servlet>
+    <description></description>
+    <display-name>NotificationYAHOO</display-name>
+    <servlet-name>NotificationYAHOO</servlet-name>
+    <servlet-class>com.tah.dashboard.servlet.NotificationYAHOO</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NotificationYAHOO</servlet-name>
+    <url-pattern>/NotificationYAHOO</url-pattern>
+  </servlet-mapping>
+    <servlet>
+    <description></description>
+    <display-name>NotificationMSN</display-name>
+    <servlet-name>NotificationMSN</servlet-name>
+    <servlet-class>com.tah.dashboard.servlet.NotificationMSN</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NotificationMSN</servlet-name>
+    <url-pattern>/NotificationMSN</url-pattern>
+  </servlet-mapping>
    <servlet>
    	<servlet-name>runOnlineUsersSingleton</servlet-name>
    	<servlet-class>com.tah.dashboard.singleton.runOnlineUsersSingleton</servlet-class>
