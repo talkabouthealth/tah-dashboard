@@ -129,7 +129,7 @@
 		var exist = 0;
 		if(idYAHOO.length == 0){
 			idYAHOO.push(_userId);
-			YAHOO.push(_userEmail);
+			YAHOO.push(_userEmail.slice(0, _userEmail.indexOf("@")));
 		}else{
 			for(i = 0; i < idYAHOO.length; i++){
 				if(idYAHOO[i] == _userId){
@@ -140,7 +140,7 @@
 			}	
 			if(!exist){
 				idYAHOO.push(_userId);
-				YAHOO.push(_userEmail);				
+				YAHOO.push(_userEmail.slice(0, _userEmail.indexOf("@")));				
 			}		
 		}
 		show();	
