@@ -253,7 +253,7 @@
 										<%										
 										out.println(uI.getUname() + " has account of " + uI.getEmail() + "</br>");
 										out.println("<br>" + uI.getUname() + " is online </br>");
-										out.println("<br> Last notified on: " + uI.getlastNotiTime() + "</br>");
+										out.println("<br> Last notified on: " + uI.lastNotiTime(uI.getUid()) + "</br>");
 //										out.println("<br> current time: " + (new Timestamp(date.getTime())) + "</br>");
 										period = ((new Timestamp(date.getTime())).getYear() + 1900) + "-" + ((new Timestamp(date.getTime())).getMonth() + 1) + "-" + ((new Timestamp(date.getTime())).getDate()  - 1) + " " + (new Timestamp(date.getTime())).getHours() + ":" + (new Timestamp(date.getTime())).getMinutes() + ":" + (new Timestamp(date.getTime())).getSeconds();
 										out.println("<br> " + uI.getUname() + " has been notified " + uI.numOfNoti(uI.getUid(), period) + " times in past 24 hours.");		
