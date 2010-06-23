@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import com.tah.dashboard.dbConnection;
-import com.tah.im.IMNotifier;
-import com.tah.im.IMNotifierMSN;
+import com.tah.im.singleton.msnSingleton;
 
 /**
  * Servlet implementation class Notification
@@ -64,42 +63,14 @@ public class NotificationMSN extends HttpServlet {
 			_uId[i] = Integer.valueOf(_uId_s[i]);
 			System.out.println(_uMail[i] + " has uid of " + _uId[i]);
 		}
-		IMNotifierMSN IM = IMNotifierMSN.getInstance();
+		msnSingleton _msnSingleton = msnSingleton.getInstance();
 
 
-		IM.Broadcast(_uMail, _uId, _tId);
+		 _msnSingleton.Broadcast(_uMail, _uId, _tId);
 		response.sendRedirect("./userlist.jsp");
 	}
 
 	private void passGetData(HttpServletRequest request, HttpServletResponse response) throws Exception{
-
-		
-		String UID_S [] = request.getParameterValues("user_id");
-		String _tid_s;
-		int _tid;
-		
-		_tid_s = request.getParameter("conversation").toString();
-		_tid = Integer.valueOf(_tid_s);
-		dbConnection con = new dbConnection();
-		String sql; 
-		int [] _uid = new int [UID_S.length];
-		String email [] = new String [UID_S.length];
-		for (int i = 0; i < UID_S.length; i++){
-			
-			 _uid[i] = Integer.valueOf(UID_S[i]);
-			 sql = "SELECT email FROM talkers WHERE uid = '" + _uid[i] + "'";
-			 con.setRs(sql);
-			 while(con.getRs().next()){
-				 email[i] = (String) con.getRs().getObject("email");
-			 }
-			 System.out.println(email[i] + " " + _uid[i]);
-		}
-		
-		IMNotifierMSN IM = IMNotifierMSN.getInstance();
-		
-
-		IM.Broadcast(email, _uid, _tid);
-
-		response.sendRedirect("./dashboard.jsp");
+	
 	}
 }
