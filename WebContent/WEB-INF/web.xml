@@ -62,12 +62,12 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>GoogleInvitation</display-name>
-    <servlet-name>GoogleInvitation</servlet-name>
-    <servlet-class>com.tah.dashboard.servlet.GoogleInvitation</servlet-class>
+    <display-name>InvitationGoogle</display-name>
+    <servlet-name>InvitationGoogle</servlet-name>
+    <servlet-class>com.tah.dashboard.servlet.InvitationGoogle</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>GoogleInvitation</servlet-name>
-    <url-pattern>/GoogleInvitation</url-pattern>
+    <servlet-name>InvitationGoogle</servlet-name>
+    <url-pattern>/InvitationGoogle</url-pattern>
   </servlet-mapping>
 </web-app>

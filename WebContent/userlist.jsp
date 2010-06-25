@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.sql.Timestamp"%>
-<%@ page import="java.sql.Date"%>
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.lang.Object.*" %>
 <%@ page import="com.tah.dashboard.*"%>
@@ -33,6 +31,7 @@
   	var idGOOGLE = new Array();
   	var idYAHOO = new Array();
   	var idMSN = new Array();
+  	// Create HTTP request object.
 	function createHttpObj(){
 		if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
 			xmlhttp = new XMLHttpRequest();
@@ -42,9 +41,9 @@
 		}
 		return xmlhttp;
 	}
-	
+	// check latest topic every 5 seconds.
   	setInterval("checkLatestTopic()", 5000);
-  	
+  	//Send http request to newTopicAlert servlet to check if there's new topic
   	function checkLatestTopic(){
   		var xmlhttp = createHttpObj();
 		xmlhttp.open("GET", "newTopicAlert", true);
@@ -55,7 +54,6 @@
 					previousLatestTopicId = currentTopicId;
 					$("#alert").text("There are no new topics... pre = " + previousLatestTopicId + " current = " + currentTopicId);
 				}else if(currentTopicId > previousLatestTopicId && previousLatestTopicId != 0){
-//					window.alert("You got a new topic!!!" + previousLatestTopicId);
 					$("#alert").text("You got a new topic!!!" + " currentTopicId is " + currentTopicId + " and previoustopicid is "+ previousLatestTopicId);
 					previousLatestTopicId = currentTopicId;
 				}
@@ -63,12 +61,14 @@
 		};	
 		xmlhttp.send();
   	}
+  	// Create conversation information
   	function addConversationInfo(_convTid, _convOwner, _convTopic){
   	  	convTid = _convTid;
   	  	convOwner = _convOwner;
   	  	convTopic = _convTopic;
   	  	show();
 	}
+	// Create user information for different IM services
 	function addUserInfo(_userId, _userEmail, _imType){
 		switch(_imType){
 		case "GoogleTalk":
@@ -84,7 +84,7 @@
 			break;	
 		}
 	}
-
+	// Google user information
 	function addUserGOOGLE(_userId, _userEmail){
 		var exist = 0;
 		if(idGOOGLE.length == 0){
@@ -105,6 +105,7 @@
 		}
 		show();	
 	}
+	// MSN user information
 	function addUserMSN(_userId, _userEmail){
 		var exist = 0;
 		if(idMSN.length == 0){
@@ -125,6 +126,7 @@
 		}
 		show();	
 	}
+	//Yahoo user information
 	function addUserYAHOO(_userId, _userEmail){
 		var exist = 0;
 		if(idYAHOO.length == 0){
@@ -145,11 +147,11 @@
 		}
 		show();	
 	}
+	// Display information of selected topic and number of users who has been selected.
   	function show(){
-//	  	$("#results").html(convTid + " " + convOwner + " " + convTopic + "<br />" + userId + "<br />" + userEmail + "<br />" + "You've chosen " + userId.length + " users.");
 		$("#results").html("You've selected " + (idGOOGLE.length + idYAHOO.length + idMSN.length) + " users to join conversation(" + convTid + "). <br>" + "Yahoo: " + idYAHOO.length + "<br> GOOGLE: " + idGOOGLE.length + "<br> MSN: " + idMSN.length + "<br>");	 
 	}
-	
+	// Send http request to IMNotifier to invited users
 	function sendtoservlet(){
 		var param = setParam(idGOOGLE, GOOGLE);
 		var paramYahoo = setParam(idYAHOO, YAHOO);
@@ -183,7 +185,7 @@
 		httprequestYahoo.send(paramYahoo);
 		httprequestMSN.send(paramMSN);
 	}
-	
+	// Create parameter string for POST method.
 	function setParam(_userId, _userEmail){
 		param = "convTid=" + convTid + "&convOwner=" + convOwner + "&convTopic=" + convTopic;
 		for(i = 0; i < _userId.length; i++){
@@ -267,7 +269,7 @@
 					<td valign = "top">
 						<div id = "userlist">
 							<table border = "1">
-								<tr>
+								<tr>								
 								<% onlineUsersSingleton onlineUserInfo = onlineUsersSingleton.getInstance(); %>
 									<th> Online Users ( <%= onlineUserInfo.getOnlineUserMap().size() %> )
 									</th>   
@@ -277,8 +279,6 @@
 									<%
 										Collection collection = onlineUserInfo.getOnlineUserMap().values();
 										Iterator iterator = collection.iterator();
-										java.util.Date date= new java.util.Date();
-										String period;
 										while(iterator.hasNext()){
 											userInfo uI = (userInfo) iterator.next();
 									%>
@@ -286,8 +286,7 @@
 									<%										
 										out.println(uI.getUname() + " has account of " + uI.getEmail() + " with IM type of " + uI.getIMType(uI.getUid()) + "<br>");
 										out.println("Last notified on: " + uI.lastNotiTime(uI.getUid()) + "<br>");
-										period = ((new Timestamp(date.getTime())).getYear() + 1900) + "-" + ((new Timestamp(date.getTime())).getMonth() + 1) + "-" + ((new Timestamp(date.getTime())).getDate()  - 1) + " " + (new Timestamp(date.getTime())).getHours() + ":" + (new Timestamp(date.getTime())).getMinutes() + ":" + (new Timestamp(date.getTime())).getSeconds();
-										out.println(uI.getUname() + " has been notified " + uI.numOfNoti(uI.getUid(), period) + " times in past 24 hours.<br>");		
+										out.println(uI.getUname() + " has been notified " + uI.numOfNoti(uI.getUid()) + " times in past 24 hours.<br>");		
 										
 									}	
 									%>
