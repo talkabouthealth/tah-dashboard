@@ -70,4 +70,12 @@
     <servlet-name>InvitationGoogle</servlet-name>
     <url-pattern>/InvitationGoogle</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>Invitation</servlet-name>
+    <servlet-class>com.tah.dashboard.servlet.Invitation</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Invitation</servlet-name>
+    <url-pattern>/Invitation</url-pattern>
+  </servlet-mapping>
 </web-app>
