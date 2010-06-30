@@ -15,32 +15,36 @@ public class Invitation extends HttpServlet {
        
 	protected void doGet(HttpServletRequest request, 
 			HttpServletResponse response) throws ServletException, IOException {
-		String contactEmail = request.getParameter("email");
-		if (contactEmail != null) {
+		String imUsername = request.getParameter("imusername");
+		String imService = request.getParameter("imservice");
+		if (imService != null && imUsername != null) {
 			//select needed singleton
 			//TODO: we can make one interface "singleton" and create/get it with Factory pattern
-			if (contactEmail.contains("gmail.com")) {
+			//TODO: for some services imUsername should be full email?
+			if (imService.equals("GoogleTalk")) {
 				//TODO: code conventions?
 				googleSingleton _googleSingleton = googleSingleton.getInstance();
 				try {
-					System.out.println("Add contact!");
-					_googleSingleton.addContact(contactEmail);
+					System.out.println("Add google contact!");
+					_googleSingleton.addContact(imUsername);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			else if (contactEmail.contains("yahoo.")){
+			else if (imService.equals("YahooIM")) {
 				yahooSingleton _yahooSingleton = yahooSingleton.getInstance();
 				try {
-					_yahooSingleton.addContact(contactEmail);					
+					System.out.println("Add yahoo contact!");
+					_yahooSingleton.addContact(imUsername);					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			else {
+			else if (imService.equals("WindowsLive")) {
 				msnSingleton _msnSingleton = msnSingleton.getInstance();
 				try {
-					_msnSingleton.addContact(contactEmail);
+					System.out.println("Add msn contact!");
+					_msnSingleton.addContact(imUsername);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
