@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.tah.im.dbConnection;
+import com.tah.im.DBUtil;
 
 
 /**
@@ -63,16 +63,8 @@ public class newTopicAlert extends HttpServlet {
 
 	private void queryNewTopic(HttpServletRequest request,
 			HttpServletResponse response) throws SQLException, IOException {
-		// TODO Auto-generated method stub
-		dbConnection con = new dbConnection();
-		String str;
-		int lastTopicId = 0;
-		str = "SELECT MAX(topic_id) FROM topics";
-		con.setRs(str);
-		// Get the latest created topic id.
-		while(con.getRs().next()){
-			lastTopicId = con.getRs().getInt("MAX(topic_id)");
-		}
+		String lastTopicId = DBUtil.getLastTopicId();
+		
 		request.setAttribute("currentLatestTopic", lastTopicId);
 		response.setContentType("text/html"); 
         PrintWriter out = response.getWriter(); 

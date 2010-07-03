@@ -1,15 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.lang.Object.*" %>
 <%@ page import="com.tah.dashboard.*"%>
-<%@ page import="com.tah.im.dbConnection"%>
-<%@ page import="com.tah.im.userInfo" %>
+<%@ page import="com.tah.im.*" %>
 <%@ page import="com.tah.im.singleton.onlineUsersSingleton" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Collection" %>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="java.util.Map" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -149,7 +144,9 @@
 	}
 	// Display information of selected topic and number of users who has been selected.
   	function show(){
-		$("#results").html("You've selected " + (idGOOGLE.length + idYAHOO.length + idMSN.length) + " users to join conversation(" + convTid + "). <br>" + "Yahoo: " + idYAHOO.length + "<br> GOOGLE: " + idGOOGLE.length + "<br> MSN: " + idMSN.length + "<br>");	 
+		$("#results").html("You've selected " + (idGOOGLE.length + idYAHOO.length + idMSN.length) 
+			+ " users to join conversation(" + convTid + "). <br>" + "Yahoo: " + idYAHOO.length 
+			+ "<br> GOOGLE: " + idGOOGLE.length + "<br> MSN: " + idMSN.length + "<br>");	 
 	}
 	// Send http request to IMNotifier to invited users
 	function sendtoservlet(){
@@ -167,17 +164,23 @@
 		httprequestYahoo.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		httprequestMSN.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		httprequest.onreadystatechange=function(){
-			if (httprequestYahoo.readyState == 4 && httprequestYahoo.status == 200 && httprequestMSN.readyState == 4 && httprequestMSN.status == 200 && httprequest.readyState == 4 && httprequest.status == 200){
+			if (httprequestYahoo.readyState == 4 && httprequestYahoo.status == 200 
+					&& httprequestMSN.readyState == 4 && httprequestMSN.status == 200 
+					&& httprequest.readyState == 4 && httprequest.status == 200){
 				window.location.reload();
 		    }
 		};	
 		httprequestYahoo.onreadystatechange=function(){
-			if (httprequestYahoo.readyState == 4 && httprequestYahoo.status == 200 && httprequestMSN.readyState == 4 && httprequestMSN.status == 200 && httprequest.readyState == 4 && httprequest.status == 200){
+			if (httprequestYahoo.readyState == 4 && httprequestYahoo.status == 200 
+					&& httprequestMSN.readyState == 4 && httprequestMSN.status == 200 
+					&& httprequest.readyState == 4 && httprequest.status == 200){
 				window.location.reload();
 		    }
 		};	
 		httprequestMSN.onreadystatechange=function(){
-			if (httprequestYahoo.readyState == 4 && httprequestYahoo.status == 200 && httprequestMSN.readyState == 4 && httprequestMSN.status == 200 && httprequest.readyState == 4 && httprequest.status == 200){
+			if (httprequestYahoo.readyState == 4 && httprequestYahoo.status == 200 
+					&& httprequestMSN.readyState == 4 && httprequestMSN.status == 200 
+					&& httprequest.readyState == 4 && httprequest.status == 200){
 				window.location.reload();
 		    }
 		};	
@@ -214,19 +217,25 @@
 									<tr>
 										<td>
 									<%
-										dbConnection con = new dbConnection();									
-										String sqlStatement = "SELECT DISTINCT topics.*, noti_history.noti_time, talkers.* FROM topics LEFT JOIN noti_history ON topics.topic_id = noti_history.topic_id LEFT JOIN talkers ON topics.uid = talkers.uid WHERE noti_history.noti_time is null ORDER BY topics.creation_date";
-										con.setRs(sqlStatement);									
-										while(con.getRs().next()){
-									%>											
-											<input type = "radio" name = "conversation" value = "<%=con.getRs().getObject("topic_id")%>" onclick = "addConversationInfo('<%=con.getRs().getObject("topic_id")%>', '<%=con.getRs().getObject("uname")%>', '<%=con.getRs().getObject("topic")%>')">
+										//String sqlStatement = "SELECT DISTINCT topics.*, noti_history.noti_time, talkers.* 
+										//FROM topics LEFT JOIN noti_history ON topics.topic_id = noti_history.topic_id 
+										//LEFT JOIN talkers ON topics.uid = talkers.uid 
+										//WHERE noti_history.noti_time is null ORDER BY topics.creation_date";
+					
+										List<Map<String, String>> topicsList = DBUtil.loadTopics(false);
+										for (Map<String, String> topicInfo : topicsList) {
+									%>
+											<input type = "radio" name = "conversation" value = "<%= topicInfo.get("topicId") %>" 
+												onclick = "addConversationInfo('<%= topicInfo.get("topicId") %>', 
+													'<%= topicInfo.get("uname") %>', '<%= topicInfo.get("uname") %>')">
 									<%
-											out.println(con.getRs().getObject("topics.topic") + " was created by " + con.getRs().getObject("topics.uid") + " on " + con.getRs().getObject("topics.creation_date") +"<br>");
-											out.println("User name:   " + con.getRs().getObject("talkers.uname") + "<br>");
-											out.println("Gender:   " + con.getRs().getObject("talkers.gender") + "<br>");
+											
+											out.println(topicInfo.get("topic") + " was created by " + 
+													topicInfo.get("uid") + " on " + 
+													topicInfo.get("cr_date") +"</br>");
+											out.println("<br>User name:   " + topicInfo.get("uname") + "</br>");
+											out.println("<br>Gender:   " + topicInfo.get("gender") + "</br>");
 										}
-										con.getRs().close();
-										con.getCon().close();
 									%>
 										</td>   
 									</tr>
@@ -237,29 +246,32 @@
 									<tr>
 										<td>
 									<%
-										dbConnection con3 = new dbConnection();
-										String sqlStatement3 = "SELECT DISTINCT topics.*, noti_history.noti_time, talkers.* FROM topics RIGHT JOIN noti_history ON topics.topic_id = noti_history.topic_id LEFT JOIN talkers ON topics.uid = talkers.uid WHERE noti_history.noti_time is not null GROUP BY topics.topic_id ORDER BY topics.creation_date";
-										con3.setRs(sqlStatement3);
+										//String sqlStatement3 = "SELECT DISTINCT topics.*, noti_history.noti_time, talkers.* 
+										//FROM topics RIGHT JOIN noti_history ON topics.topic_id = noti_history.topic_id 
+										//LEFT JOIN talkers ON topics.uid = talkers.uid WHERE noti_history.noti_time is not null 
+										//GROUP BY topics.topic_id ORDER BY topics.creation_date";
 										
-										while(con3.getRs().next()){
+										topicsList = DBUtil.loadTopics(true);
+										for (Map<String, String> topicInfo : topicsList) {
 									%>
-											<input type = "radio" name = "conversation" value = "<%=con3.getRs().getObject("topic_id")%>" onclick = "addConversationInfo('<%=con3.getRs().getObject("topic_id")%>', '<%=con3.getRs().getObject("uname")%>', '<%=con3.getRs().getObject("topic")%>')">
-											
+											<input type = "radio" name = "conversation" value = "<%= topicInfo.get("topicId") %>" 
+												onclick = "addConversationInfo('<%= topicInfo.get("topicId") %>', 
+													'<%= topicInfo.get("uname") %>', '<%= topicInfo.get("uname") %>')">
 									<%
-											dbConnection con4 = new dbConnection();
-											String sqlStatement4 = "SELECT COUNT(*) FROM topics RIGHT JOIN noti_history ON topics.topic_id = noti_history.topic_id WHERE topics.topic_id = " + con3.getRs().getInt("topics.topic_id");
-											con4.setRs(sqlStatement4);
-											out.println(con3.getRs().getObject("topics.topic") + " was created by " + con3.getRs().getObject("topics.uid") + " on " + con3.getRs().getObject("topics.creation_date") +"<br>");
-											while(con4.getRs().next()){
-											out.println("Topic " + con3.getRs().getObject("topics.topic_id") + " has inviteed " + con4.getRs().getInt("COUNT(*)") + " people<br>");
-																													
-											}
-											out.println("User name:   " + con3.getRs().getObject("talkers.uname") + "<br>");
-											out.println("Gender:   " + con3.getRs().getObject("talkers.gender") + "<br>");
-																													
+											//String sqlStatement4 = 
+											//	"SELECT COUNT(*) FROM topics 
+											//	RIGHT JOIN noti_history ON topics.topic_id = noti_history.topic_id 
+											//	WHERE topics.topic_id = " + con3.getRs().getInt("topics.topic_id");
+											int numOfTopic = DBUtil.getNotiNumByTopic(topicInfo.get("topicId"));
+											out.println(topicInfo.get("topic") + " was created by " 
+													+ topicInfo.get("uid") + " on " 
+													+ topicInfo.get("cr_date") +"</br>");
+											out.println("<br>Topic " + topicInfo.get("topicId")
+													+ " has inviteed " + numOfTopic + " people</br>");
+											
+											out.println("<br>User name:   " + topicInfo.get("uname") + "</br>");
+											out.println("<br>Gender:   " + topicInfo.get("gender") + "</br>");
 										}
-										con3.getRs().close();
-										con3.getRs().close();
 									%>
 										</td>   
 									</tr>
@@ -282,11 +294,15 @@
 										while(iterator.hasNext()){
 											userInfo uI = (userInfo) iterator.next();
 									%>
-											<input type = "checkbox" name = "user_id" value = "<%= uI.getUid() %>" onclick = "addUserInfo('<%= uI.getUid() %>', '<%= uI.getEmail() %>', '<%= uI.getIMType(uI.getUid()) %>')"> 
+											<input type = "checkbox" name = "user_id" value = "<%= uI.getUid() %>" 
+												onclick = "addUserInfo('<%= uI.getUid() %>', 
+													'<%= uI.getEmail() %>', '<%= uI.getIMType(uI.getUid()) %>')"> 
 									<%										
-										out.println(uI.getUname() + " has account of " + uI.getEmail() + " with IM type of " + uI.getIMType(uI.getUid()) + "<br>");
+										out.println(uI.getUname() + " has account of " + uI.getEmail() + " with IM type of " + 
+												uI.getIMType(uI.getUid()) + "<br>");
 										out.println("Last notified on: " + uI.lastNotiTime(uI.getUid()) + "<br>");
-										out.println(uI.getUname() + " has been notified " + uI.numOfNoti(uI.getUid()) + " times in past 24 hours.<br>");		
+										out.println(uI.getUname() + " has been notified " + uI.numOfNoti(uI.getUid()) 
+												+ " times in past 24 hours.<br>");		
 										
 									}	
 									%>

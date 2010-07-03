@@ -48,18 +48,13 @@ public class NotificationYAHOO extends HttpServlet {
 		}
 	}
 	private void passPostData(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		// TODO Auto-generated method stub
 		System.out.println(request.getParameter("convTid").toString());
 		System.out.println(request.getParameter("convOwner").toString());
 		System.out.println(request.getParameter("convTopic").toString());
-		String _uId_s [] = request.getParameterValues("userId"); 
+		String _uId [] = request.getParameterValues("userId"); 
 		String _uMail [] = request.getParameterValues("userEmail"); 
-		int _tId = Integer.valueOf(request.getParameter("convTid").toString());
-		int _uId [] = new int [_uId_s.length];
-		for(int i = 0; i < _uId.length; i++){
-			_uId[i] = Integer.valueOf(_uId_s[i]);
-			System.out.println(_uMail[i] + " has uid of " + _uId[i]);
-		}
+		String _tId = request.getParameter("convTid");
+		
 		// Get instance for yahooSingleton
 		yahooSingleton _yahooSingleton = yahooSingleton.getInstance();
 		// Send invitation to Yahoo users.
